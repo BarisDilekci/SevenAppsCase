@@ -11,5 +11,6 @@ struct AppConstants {
     struct API {
         static let baseURL = "https://jsonplaceholder.typicode.com"
         static let path = "/users"
+        static let fullURL = baseURL + path
     }
 }

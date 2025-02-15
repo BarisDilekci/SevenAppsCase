@@ -10,8 +10,10 @@ import Foundation
 
 /* Bu modeli QucikType ile oluşturdum.  JSON yapısını yapıştırdım, gerekli ayarlamaları yapıp buraya aktardım. */
 
+
 struct User: Codable {
     let id: Int
-    let name, username, email: String
-    let phone, website: String
+    let name: String
+    let username: String
+    let email: String
 }
