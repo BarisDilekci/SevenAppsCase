@@ -28,6 +28,8 @@ final class UserListViewModel: UserListViewHomeInterface {
     
     var onError: ((String) -> Void)?
     var onDataFetched: (() -> Void)?
+    var onUserDetailFetched: ((User) -> Void)?
+
     
     init(networkService: INetworkService) {
         self.networkService = networkService
@@ -58,15 +60,21 @@ final class UserListViewModel: UserListViewHomeInterface {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        let selectedUser = users[indexPath.row]
-        print("Seçilen kullanıcı: \(selectedUser.name)")
-    }
+          let user = getUser(indexPath: indexPath)
+                  fetchUserDetail(id: user.id ?? 1) { [weak self] result in
+                      switch result {
+                      case .success(let userDetail):
+                          self?.onUserDetailFetched?(userDetail)
+                      case .failure(let error):
+                          self?.onError?(error.localizedDescription)
+                      }
+                  }
+      }
+      
     
     func userCellViewModel(at indexPath: IndexPath) -> User {
         let user = getUser(indexPath: indexPath)
-        let name = user.name
-        let email = user.email
-        return User(id: user.id, name: name, username: user.username, email: email)
+        return User(id: user.id, name: user.name, phone: user.phone, email: user.email, website: user.website)
     }
 }
 
@@ -83,4 +91,15 @@ extension UserListViewModel {
             }
         }
     }
+    
+    func fetchUserDetail(id: Int, completion: @escaping (Result<User, Error>) -> Void) {
+            networkService.fetchUserDetailData(id: id) { result in
+                switch result {
+                case .success(let userDetail):
+                    completion(.success(userDetail))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
 }

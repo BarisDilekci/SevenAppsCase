@@ -38,6 +38,16 @@ final class UserListViewController: UIViewController {
     init(viewModel: UserListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        
+        viewModel.onUserDetailFetched = { [weak self] userDetail in
+                   guard let self = self else { return }
+                   DispatchQueue.main.async {
+                       let detailViewModel = UserDetailViewModel(user: userDetail)
+                       let detailViewController = UserDetailViewController(viewModel: detailViewModel)
+                       self.navigationController?.pushViewController(detailViewController, animated: true)
+                   }
+               }
+        
     }
     
     required init?(coder: NSCoder) {
