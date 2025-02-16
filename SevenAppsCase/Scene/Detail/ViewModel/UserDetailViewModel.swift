@@ -6,3 +6,18 @@
 //
 
 import Foundation
+
+final class UserDetailViewModel {
+    
+    let userName: String
+    let email: String
+    let phone: String
+    let website: String
+
+    init(user: User) {
+        self.userName = user.name
+        self.email = user.email
+        self.phone = user.phone
+        self.website = user.website
+    }
+}
